@@ -1,0 +1,220 @@
+-- The Code used in this product is distributed WITHOUT ANY WARRANTY.
+-- The signals generated from this code are for INDICATION purposes only.
+-- TRADING DISCRETION IS ADVISED.
+
+instrument {
+    name = 'Mo v1',
+    short_name = 'Mo_v1',
+    icon = '',
+    overlay = true
+}
+
+input_group {
+"BUY",
+buy_color = input {default = "lime", type = input.color}
+}
+
+input_group {
+"SELL",
+sell_color = input { default = "orangered", type = input.color },
+}
+
+input_group {
+    "Stockhastic",
+    k_period = input (13, "Stockhastic period K", input.integer, 1),
+    d_period = input (3, "Stockhastic period D", input.integer, 1),
+	smooth = input (3, "Stockhastic smoothing", input.integer, 1),
+	overboughtZone = input (80, "Stockhastic overbought", input.integer, 1),
+	oversoldZone = input (20, "Stockhastic oversold", input.integer, 1),
+}
+
+input_group {
+    "RSI",
+	rsi_period = input (21, "RSI period", input.integer, 1),
+	buyRegion = input (50, "RSI buy region", input.integer, 1),
+	sellRegion = input (50, "RSI sell region", input.integer, 1),
+}
+
+input_group {
+    "MACD",
+    fast = input (12, "MACD fast period", input.integer, 1, 250),
+    slow = input (26, "MACD slow period", input.integer, 1, 250),
+    signal_period = input (9, "MACD signal period", input.integer, 1, 250),
+}
+
+input_group {
+    "ADX",
+    adx_period = input (14, "ADX period", input.integer, 1),
+	threshold  = input (25, "ADX threshold", input.integer, 1)
+}
+
+-- ==============  STK ======================
+k = sma (stochastic (close, k_period), smooth) * 100
+d = sma (k, d_period)
+
+-- if we are in overbought zone then adjust accordingly.
+if k > overboughtZone and d > overboughtZone then
+	stkIsTop = true
+	-- stkIsSELL = false
+	-- stkIsBottom = false
+	-- stkIsBUY = false
+end
+
+-- if we are in oversold zone then adjust accordingly.
+if k < oversoldZone and d < oversoldZone then
+	-- stkIsTop = false
+	-- stkIsSELL = false
+	stkIsBottom = true
+	-- stkIsBUY = false
+end
+
+-- if we are in overbought zone
+if stkIsTop == true then
+	-- if we cross down and leave overbought zone
+	if k < overboughtZone and d < overboughtZone and k < d then
+		-- we are ready to look for a sell opportunity.
+		stkIsSELL = true
+	end
+end
+
+-- if are in oversold zone
+if stkIsBottom == true then
+	-- if we cross up and leave oversold zone
+	if k > oversoldZone and d > oversoldZone and k > d then
+		-- we are ready to look for a buy opportunity.
+		stkIsBUY = true
+	end
+end
+
+if stkIsSELL == true then
+	if k > d then
+		-- if we are looking for a sell and we have an opposite cross then the signal is canceled.
+		-- we can continue looking for a sell since momentum is downwards.
+		stkIsSELL = false
+	end
+end
+
+if stkIsBUY == true then
+	if k < d then
+		-- if we are looking for a buy and we have an opposite cross then the signal is canceled.
+		-- we can continue looking for a buy since momentum is upwards.
+		stkIsBUY = false
+	end
+end
+---------------------------------------------------------------------
+
+-- ================= RSI ======================
+myrsi = rsi(close, rsi_period)
+
+-- If RSI is in the sell Region, the trend is down and we are only interested in sell opportunities.
+if myrsi < sellRegion then
+	rsiIsSELL = true
+	rsiIsBUY = false
+end
+-- If RSI is in the buy Region, the trend is up and we are only interested in buy opportunities.
+if myrsi > buyRegion then
+	rsiIsSELL = false
+	rsiIsBUY = true
+end
+---------------------------------------------------------------------
+
+
+-- ===============  MACD =================
+fastMA = ema(close, fast)
+slowMA = ema(close, slow)
+
+macd = fastMA - slowMA
+signal = ema(macd, signal_period)
+histo = macd - signal
+
+-- If we have a cross up then we are ready to buy.
+if  histo[0] > 0 then
+    macdBUY = true
+    macdSELL = false
+end
+
+-- If we have a cross down then we are ready to sell.
+if  histo[0] < 0 then
+    macdBUY = false
+    macdSELL = true
+end
+---------------------------------------------------------------------
+
+-- ===============  ADX =================
+up_move = change (high)
+down_move = -change (low)
+
+pdm = iff (up_move > down_move and nz(up_move) > 0, up_move, 0)
+mdm = iff (down_move > up_move and nz(down_move) > 0, down_move, 0)
+
+atr = rma(tr, adx_period)
+
+pdi = 100 * rma (pdm / atr, adx_period)
+mdi = 100 * rma (mdm / atr, adx_period)
+
+adx = 100 * rma (abs (pdi - mdi) / (pdi + mdi), adx_period)
+
+if pdi > mdi then
+	adxIsSELL = false
+	if pdi > threshold then
+		adxIsBUY = true
+	end
+end
+
+if mdi > pdi then
+	adxIsBUY = false
+	if mdi > threshold then
+		adxIsSELL = true
+	end
+end
+---------------------------------------------------------------------
+
+-- If all sell conditions are met then we have a clear signal that a sell opportunity may present itself.
+-- We represent this by drawing a sell indicator above the signal candle.
+if stkIsSELL == true and macdSELL == true and rsiIsSELL == true and adxIsSELL == true then
+plot_shape(
+			true ,
+	        "Sell",
+	        shape_style.arrowdown,
+	        shape_size.normal,
+	        sell_color,
+	        shape_location.abovebar,
+	        0,
+	        "Sell",
+			sell_color
+		)
+			stkIsTop = false
+	stkIsSELL = false
+	stkIsBottom = false
+	stkIsBUY = false
+	rsiIsSELL = false
+	rsiIsBUY = false
+	macdSELL = false
+	macdBUY = false
+	adxIsSELL = false
+	end
+
+-- If all buy conditions are met then we have a clear signal that a buy opportunity may present itself.
+-- We represent this by drawing a buy indicator above the signal candle.
+if stkIsBUY == true and macdBUY == true and rsiIsBUY == true and adxIsBUY == true then
+plot_shape(
+			true ,
+    		"Buy",
+    		shape_style.arrowup,
+    		shape_size.normal,
+    		buy_color,
+    		shape_location.belowbar,
+    		0,
+    		"Buy",
+			buy_color
+		)
+			stkIsTop = false
+	stkIsSELL = false
+	stkIsBottom = false
+	stkIsBUY = false
+	rsiIsSELL = false
+	rsiIsBUY = false
+	macdSELL = false
+	macdBUY = false
+	adxIsBUY = false
+	end
