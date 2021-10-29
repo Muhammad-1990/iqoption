@@ -147,7 +147,62 @@ plot_shape((downTrend[0] and bearishThreeLineStrike)
         ,0
         ,""
         ,sell_color
-) 
+)
+
+if upTrend[0] and 
+((close[0] > open[0]) and (close[1] < open[1]) and (abs(close[0]-open[0]) > abs(open[1] - close[1]))
+or
+(close[3] < open[3] and close[2] < open[2] and close[1] < open[1] and close > open and abs(close - open) > abs(open[1] - close[1]))
+) then
+
+    StopLoss = lowest(low, 3)
+    TakeProfit = close[0] + ((close[0] - StopLoss) *2)
+
+    rect {
+        first = StopLoss,
+        second = close[0],
+        name = "myStopLoss",
+        color = "rgba(255, 0, 0, 0.25)",
+        width = 1
+    }
+
+    rect {
+        first = close[0],
+        second = TakeProfit,
+        name = "myTakeProfit",
+        color =  "rgba(50, 205, 50, 0.25)",
+        width = 1
+    }
+end
+
+
+if downTrend[0] and
+(((close[0] < open[0]) and (close[1] > open[1]) and (abs(open[0] - close[0]) > abs(close[1]-open[1])))
+or
+(close[3] > open[3] and close[2] > open[2] and close[1] > open[1] and close < open and abs(open - close) > abs(close[1] - open[1]))
+)then
+    
+
+    StopLoss = highest(high, 3)
+    TakeProfit = close[0] - ((StopLoss - close[0] ) *2)
+
+    rect {
+        first = StopLoss,
+        second = close[0],
+        name = "myStopLoss",
+        color = "rgba(255, 0, 0, 0.25)",
+        width = 1
+    }
+
+    rect {
+        first = close[0],
+        second = TakeProfit,
+        name = "myTakeProfit",
+        color =  "rgba(50, 205, 50, 0.25)",
+        width = 1
+    }
+end
+
 
 -- Check if user is displaying trend fill option
 if trend_Fill == true then
