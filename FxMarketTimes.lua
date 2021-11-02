@@ -37,7 +37,7 @@ tf = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14",
 input_group {
     "Sydney",
     -- Indicates if the Sydney Session should be displayed in the indicator window.
-    Sydney_Visible = input { default = true, type = input.plot_visibility },
+    Sydney_Visible = input { default = false, type = input.plot_visibility },
     -- Sydney Session indication color.
     Sydney_Color = input {default = "#e9eaeb", type = input.color },
     -- Sydney Session market open time.
@@ -50,7 +50,7 @@ input_group {
 input_group {
     "Tokyo",
     -- Indicates if the Tokyo Session should be displayed in the indicator window.
-    Tokyo_Visible = input { default = true, type = input.plot_visibility },
+    Tokyo_Visible = input { default = false, type = input.plot_visibility },
     -- Tokyo Session indication color.
     Tokyo_Color = input {default = "#a02de4", type = input.color },
     -- Tokyo Session market open time.
@@ -63,7 +63,7 @@ input_group {
 input_group {
     "London",
     -- Indicates if the London Session should be displayed in the indicator window.
-    London_Visible = input { default = true, type = input.plot_visibility },
+    London_Visible = input { default = false, type = input.plot_visibility },
     -- London Session indication color.
     London_Color = input {default = "#248cd5", type = input.color },
     -- London Session market open time.
@@ -76,7 +76,7 @@ input_group {
 input_group {
     "New York",
     -- Indicates if the New York Session should be displayed in the indicator window.
-    NewYork_Visible = input { default = true, type = input.plot_visibility },
+    NewYork_Visible = input { default = false, type = input.plot_visibility },
     -- New York Session indication color.
     NewYork_Color = input {default = "#3ebe8f", type = input.color },
     -- New York Session market open time.
@@ -85,11 +85,24 @@ input_group {
     NewYork_Close = input(23,"New York close", input.string_selection,tf)
 }
 
+-- User and default configuration settings related to preferred Forex market session.
+input_group {
+    "Preferred",
+    -- Indicates if the Preferred Session should be displayed in the indicator window.
+    Preferred_Visible = input { default = true, type = input.plot_visibility },
+    -- Preferred Session indication color.
+    Preferred_Color = input {default = "#3ebe8f", type = input.color },
+    -- Preferred Session market open time.
+    Preferred_Open = input(8,"Preferred open", input.string_selection,tf),
+    -- Preferred Session market close time.
+    Preferred_Close = input(14,"Preferred close", input.string_selection,tf)
+}
+
+-- histogram gap size that increments according to which sessions are visible so that we dont get an ugly gap between sessions.
+size = 0
+
 -- We check if our current candle in question has a valid open_time value
 if (open_time ~= nil) then
-    
-    -- Create a structured date table using the unix timestamp of the current candle open_time 
-    mydate = date(get_value(open_time))
 
     --------------------- Sydney session ----------------------------------------
     -- We first check if the user wants to display the Sydney session trading time.
@@ -97,51 +110,53 @@ if (open_time ~= nil) then
         -- Trading sessions might overlap two different date days in most users timezones.
         -- We therefore need to check if our closing hour is less than the opening hour.
         if Sydney_Close < Sydney_Open then
-            if (mydate.hour >= Sydney_Open and mydate.hour < 24) or ( mydate.hour >= 0 and mydate.hour < Sydney_Close) then
+            if (hour >= Sydney_Open and hour < 24) or ( hour >= 0 and hour < Sydney_Close) then
                 rect {
-                    first = 0,
-                    second = 0.1,
+                    first = size,
+                    second = size + 0.1,
                     color = Sydney_Color,
                     width = 0.5
                 }
             end
         else
-            if mydate.hour >= Sydney_Open and mydate.hour < Sydney_Close then
+            if hour >= Sydney_Open and hour < Sydney_Close then
                 rect {
-                    first = 0,
-                    second = 0.1,
+                    first = size,
+                    second = size + 0.1,
                     color = Sydney_Color,
                     width = 0.5
                 }
             end
         end
+        size = size + 0.2
     end
     ------------------------------------------------------------------------------
 
-    --------------------- Tokyo session ----------------------------------------
+    --------------------- Tokyo session ------------------------------------------
     -- We first check if the user wants to display the Tokyo session trading time.
     if Tokyo_Visible == true then
         -- Trading sessions might overlap two different date days in most users timezones.
         -- We therefore need to check if our closing hour is less than the opening hour.
         if Tokyo_Close < Tokyo_Open then
-            if (mydate.hour >= Tokyo_Open and mydate.hour < 24) or ( mydate.hour >= 0 and mydate.hour < Tokyo_Close) then
+            if (hour >= Tokyo_Open and hour < 24) or ( hour >= 0 and hour < Tokyo_Close) then
                 rect {
-                    first = 0.2,
-                    second = 0.3,
+                    first = size,
+                    second = size + 0.1,
                     color = Tokyo_Color,
                     width = 0.5
                 }
             end
         else
-            if mydate.hour >= Tokyo_Open and mydate.hour < Tokyo_Close then
+            if hour >= Tokyo_Open and hour < Tokyo_Close then
                 rect {
-                    first = 0.2,
-                    second = 0.3,
+                    first = size,
+                    second = size + 0.1,
                     color = Tokyo_Color,
                     width = 0.5
                 }
             end
         end
+        size = size + 0.2
     end
     ------------------------------------------------------------------------------
 
@@ -151,24 +166,25 @@ if (open_time ~= nil) then
         -- Trading sessions might overlap two different date days in most users timezones.
         -- We therefore need to check if our closing hour is less than the opening hour.
         if London_Close < London_Open then
-            if (mydate.hour >= London_Open and mydate.hour < 24) or ( mydate.hour >= 0 and mydate.hour < London_Close) then
+            if (hour >= London_Open and hour < 24) or ( hour >= 0 and hour < London_Close) then
                 rect {
-                    first = 0.4,
-                    second = 0.5,
+                    first = size,
+                    second = size + 0.1,
                     color = London_Color,
                     width = 0.5
                 }
             end
         else
-            if mydate.hour >= London_Open and mydate.hour < London_Close then
+            if hour >= London_Open and hour < London_Close then
                 rect {
-                    first = 0.4,
-                    second = 0.5,
+                    first = size,
+                    second = size + 0.1,
                     color = London_Color,
                     width = 0.5
                 }
             end
         end
+        size = size + 0.2
     end
     ------------------------------------------------------------------------------
 
@@ -178,25 +194,53 @@ if (open_time ~= nil) then
         -- Trading sessions might overlap two different date days in most users timezones.
         -- We therefore need to check if our closing hour is less than the opening hour.
         if NewYork_Close < NewYork_Open then
-            if (mydate.hour >= NewYork_Open and mydate.hour < 24) or ( mydate.hour >= 0 and mydate.hour < NewYork_Close) then
+            if (hour >= NewYork_Open and hour < 24) or ( hour >= 0 and hour < NewYork_Close) then
                 rect {
-                    first = 0.6,
-                    second = 0.7,
+                    first = size,
+                    second = size + 0.1,
                     color = NewYork_Color,
                     width = 0.5
                 }
             end
         else
-            if mydate.hour >= NewYork_Open and mydate.hour < NewYork_Close then
+            if hour >= NewYork_Open and hour < NewYork_Close then
                 rect {
-                    first = 0.6,
-                    second = 0.7,
+                    first = size,
+                    second = size + 0.1,
                     color = NewYork_Color,
                     width = 0.5
                 }
             end
         end
+        size = size + 0.2
+    end
+    ------------------------------------------------------------------------------
+
+    --------------------- Preferred session --------------------------------------
+    -- We first check if the user wants to display the Preferred session trading time.
+    if Preferred_Visible == true then
+        -- Trading sessions might overlap two different date days in most users timezones.
+        -- We therefore need to check if our closing hour is less than the opening hour.
+        if Preferred_Close < Preferred_Open then
+            if (hour >= Preferred_Open and hour < 24) or ( hour >= 0 and hour < Preferred_Close) then
+                rect {
+                    first = size,
+                    second = size + 0.1,
+                    color = Preferred_Color,
+                    width = 0.5
+                }
+            end
+        else
+            if hour >= Preferred_Open and hour < Preferred_Close then
+                rect {
+                    first = size,
+                    second = size + 0.1,
+                    color = Preferred_Color,
+                    width = 0.5
+                }
+            end
+        end
+        size = size + 0.2
     end
     ------------------------------------------------------------------------------
 end
-
