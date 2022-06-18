@@ -17,5 +17,4 @@ jobs:
 
     - name: build
       run: |
-        luarocks install busted
-        luarocks make
+        Echo 'need to setup build deps'
