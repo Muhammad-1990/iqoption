@@ -3,54 +3,70 @@
 <head>
     <script src="main.js"></script>
     <style>
+/* 
+#007acc
+#3e3e42
+#2d2d30
+#252526
+#1e1e1e
+ */
+
         body {
             font-family: sans-serif;
+            display: flex;
+            background-color: #2d2d30;
+            color: white;
+            margin: 0;
+            font-size: 16px;
         }
 
-        .wrapper {
+        .checklistWrapper {
             display: flex;
             flex-direction: column;
             margin: auto;
-            max-width: 960px;
             padding: 50px;
         }
 
-        ul {
+        .questionWrapper{
+            background-color: #252526;
+    border-radius: 25px;
+    padding: 20px;
+    margin-bottom: 20px;
+        }
+        .section ul {
             list-style: none;
-            display: flex;
-            justify-content: start;
-            padding: 0px;
-            border-bottom: 1px solid #f3f3f3;
-            flex-wrap: wrap;
-            margin-bottom: 60px;
+    display: flex;
+    justify-content: start;
+    padding: 0px;
+    flex-wrap: wrap;
+    margin: 0;
         }
 
-        li {
-            background-color: #fbfbfb;
-            padding: 10px 30px;
-            border-radius: 25px;
-            border: 1px solid #f4f4f4;
-            margin: 15px 15px;
-            width: max-content;
-            cursor: pointer;
-            font-size: 12px;
+        .section li {
+            background-color: #3e3e42;
+    padding: 14px 30px;
+    border-radius: 10px;
+    margin: 5px 15px;
+    width: max-content;
+    cursor: pointer;
+    font-size: 12px;
         }
 
-        li.green.selected {
+        .section li.green.selected {
             color: white;
-            background-color: green;
+            background-color: #007acc;
         }
 
-        li.red.selected {
+        .section li.red.selected {
             color: white;
-            background-color: red;
+            background-color: #007acc;
         }
 
         span {
             font-weight: bold;
-            padding: 10px 30px 10px 10px;
-            color: #353e6e;
-            display: block;
+    padding: 10px 30px 10px 10px;
+    color: #ffffff;
+    display: block;
         }
 
         span:focus-visible {
@@ -60,13 +76,12 @@
         }
 
         .percentageWrapper {
-            width: 100px;
-            height: 100px;
-            position: fixed;
-            top: 0;
-            margin: 25px;
+            box-shadow:  23px 23px 47px #171717, -23px -23px 47px #333335;
+            width: 200px;
+            height: 200px;
+            margin: 0px auto;
             border-radius: 50%;
-            background: radial-gradient(white 50%, transparent 51%), conic-gradient(red 0deg, red 0deg, rgb(186, 186, 186) 0deg, rgb(186, 186, 186) 360deg, rgb(76, 175, 80) 360deg, rgb(76, 175, 80) 360deg);
+            background: radial-gradient(#252526 60%, transparent 61%), conic-gradient(red 0deg, red 0deg, rgb(62 62 66) 0deg, rgb(62 62 66) 360deg, rgb(76, 175, 80) 360deg, rgb(76, 175, 80) 360deg);
         }
 
         input[type="button"] {
@@ -80,120 +95,301 @@
             margin: 10px 0px;
             display: none;
         }
+
+        .sidebar{
+            background-color: #2d2d30;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-right: #424242 solid 1px;
+        }
+
+        .sidebar-ul{
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: -webkit-fill-available;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            border: none;
+        }
+
+        .sidebar-ul-li{
+            background-color: #3e3e42;
+            padding: 15px 30px;
+            margin: 15px 15px;
+            cursor: pointer;
+            border-radius: 25px;
+            color: white;
+        }
+
+        .logoWrapper{
+            font-family: fantasy;
+            font-size: 40px;
+            text-align: center;
+            padding: 15px 15px;
+            cursor: pointer;
+            border-radius: 20px;
+            color: white;
+        }
+
+        .nav ul{
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .nav ul li{
+            padding: 30px 90px;
+            margin: 1px 15px;
+            cursor: pointer;
+            border-radius: 20px;
+            color: white;
+        }
+        .nav ul li:hover, .nav ul li.active{
+            background-color: #007acc;
+        }
+
+        .tab{
+            padding: 30px 90px;
+            margin: 10px 15px;
+            cursor: pointer;
+            border-radius: 20px;
+            color: white;
+            background-color: #252526;
+        }
+
+        .main
+        {
+            flex: auto;
+            flex-direction: column;
+            background-color: #2d2d30;
+        }
+
+        .main .header{
+            background-color: #2d2d30;
+            height: 75px;
+            border-bottom: #424242 solid 1px;
+        }
+
+        .main .content{
+            display: flex;
+        }
+
+        .main .content .left-bar{
+            background-color: #2d2d30;
+            display: flex;
+        }
+        .main .content .left-bar .left-bar-wrapper{
+            background-color: #252526;
+            border-radius: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            margin: 50px 50px;
+            padding: 50px 50px;
+            box-shadow: 23px 23px 47px #171717, -23px -23px 47px #333335;
+        }
+
+        .main .content .left-bar .left-bar-wrapper ul{
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .main .content .left-bar .left-bar-wrapper ul li{
+            background-color: #3e3e42;
+            margin: 12px 10px;
+            padding: 25px 25px;
+            border-radius: 15px;
+            width: 270px;
+            text-align: center;
+        }
+
+        .main .content .left-bar .left-bar-wrapper ul li.active{
+            background-color: #007acc;
+        }
+
+        .main .content .section{
+            flex: auto;
+            overflow: auto;
+            max-height: calc(100vh - 76px);
+        }
+
+
+        .main .content .section::-webkit-scrollbar
+        {
+        	width: 12px;
+        	background-color: #535353;
+        }
+
+        main .content .section::-webkit-scrollbar-thumb
+        {
+        	border-radius: 10px;
+        	box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+        	background-color: #555;
+        }
+        
     </style>
 
 </head>
 
 <body>
-    <div class="percentageWrapper">
-        <input type="button" value="save" class="saveBTN" />
-        <input type="button" value="reset" class="resetBTN" />
+
+    <div class="sidebar">
+        <div class="logoWrapper">MU-TRADER</div>
+        <div class="nav">
+                <ul>
+                    <li>Dashboard</li>
+                    <li class="active">CheckList</li>
+                    <li>Journal</li>
+                    <li>Resources</li>
+                </ul>
+        </div>
+        <div class="tab">settings</div>
     </div>
 
-    <div class="wrapper">
-        <div class="questionWrapper">
-            <span contenteditable>Can you identify market structure</span>
-            <ul>
-                <li class="green">Price is moving up making higher highs and higher lows</li>
-                <li class="red">Price is moving down making lower highs and lower lows</li>
-            </ul>
-        </div>
-
-        <div class="questionWrapper">
-            <span contenteditable>Can you identify a price channel</span>
-            <ul>
-                <li class="green">Price is clearly contained in a channel going up</li>
-                <li class="red">Price is clearly contained in a channel going down</li>
-            </ul>
-        </div>
-
-        <div class="questionWrapper">
-            <span contenteditable>Can you identify market momentum</span>
-            <ul>
-                <li class="green">There are more green candles than red</li>
-                <li class="red">There are more red candles than green</li>
-            </ul>
-        </div>
-
-        <div class="questionWrapper">
-            <span contenteditable>Can you identify market strength</span>
-            <ul>
-                <li class="green">Green candles are significantly larger than red</li>
-                <li class="red">Red candles are significantly larger than green</li>
-            </ul>
-        </div>
-
-        <div class="questionWrapper">
-            <span contenteditable>Can you identify market volume</span>
-            <ul>
-                <li class="green">Prices moves a greater distance going up with increasing volume</li>
-                <li class="red">Prices moves a greater distance going down with increasing volume</li>
-            </ul>
-        </div>
-
-        <div class="questionWrapper">
-            <span contenteditable>Can you identify 200 SMA</span>
-            <ul>
-                <li class="green">Price is greater than 200SMA</li>
-                <li class="red">Price is lesser than 200SMA</li>
-            </ul>
-        </div>
-
-        <div class="questionWrapper">
-            <span contenteditable>Can you identify 200 SMA direction</span>
-            <ul>
-                <li class="green">200SMA is sloping up more than down</li>
-                <li class="red">200SMA is sloping down more than up</li>
-            </ul>
-        </div>
-
-        <div class="questionWrapper">
-            <span contenteditable>Price has plotted a candlestick price action pattern that supports the trade
-                direction</span>
-            <ul>
-                <li class="green">bullish engulfing</li>
-                <li class="red">bearish engulfing</li>
-            </ul>
-        </div>
-
-        <div class="questionWrapper">
-            <span contenteditable>Can you identify a chart pattern</span>
-            <ul>
-                <li class="red">double top</li>
-                <li class="green">double bottom</li>
-                <li class="red">head and shoulders</li>
-                <li class="green">inverted head and shoulders</li>
-            </ul>
-        </div>
-
-        <div class="questionWrapper">
-            <span contenteditable>Is price at a significant zone</span>
-            <ul>
-                <li class="green">Price bounced of support</li>
-                <li class="red">Price broke support and retested</li>
-                <li class="red">Price bounced of resistance</li>
-                <li class="green">Price broke resistance and retested</li>
-            </ul>
-        </div>
-
-        <div class="questionWrapper">
-            <span contenteditable>Can you identify a divergence</span>
-            <ul>
-                <li class="green">hidden bullish</li>
-                <li class="red">hidden bearish</li>
-                <li class="green">regular bullish</li>
-                <li class="red">regular bearish</li>
-            </ul>
-        </div>
-
-        <div class="questionWrapper">
-            <span contenteditable>Higher Trend supports the trade direction</span>
-            <ul>
-                <li class="green">Bullish</li>
-                <li class="red">Bearish</li>
-            </ul>
+    <div class="main">
+        <div class="header"></div>
+        <div class="content">
+            <div class="left-bar">
+                <div class="left-bar-wrapper">
+                    <div class="percentageWrapper">
+                        <input type="button" value="save" class="saveBTN" />
+                        <input type="button" value="reset" class="resetBTN" />
+                    </div>
+                    
+                    <ul>
+                        <li class="active">
+                            <div class="title">Smart Trade Entry</div>
+                        </li>
+                        <li>
+                            <div class="title">Basic Trade Entry</div>
+                        </li>
+                        <li>
+                            <div class="title">Aggressive Trade Entry</div>
+                        </li>
+                        <li>
+                            <div class="title">My Custom Trade Entry</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="section">
+                <div class="checklistWrapper">
+                    <div class="questionWrapper">
+                        <span contenteditable>Can you identify market structure</span>
+                        <ul>
+                            <li class="green">Price is moving up making higher highs and higher lows</li>
+                            <li class="red">Price is moving down making lower highs and lower lows</li>
+                        </ul>
+                    </div>
+            
+                    <div class="questionWrapper">
+                        <span contenteditable>Can you identify a price channel</span>
+                        <ul>
+                            <li class="green">Price is clearly contained in a channel going up</li>
+                            <li class="red">Price is clearly contained in a channel going down</li>
+                        </ul>
+                    </div>
+            
+                    <div class="questionWrapper">
+                        <span contenteditable>Can you identify market momentum</span>
+                        <ul>
+                            <li class="green">There are more green candles than red</li>
+                            <li class="red">There are more red candles than green</li>
+                        </ul>
+                    </div>
+            
+                    <div class="questionWrapper">
+                        <span contenteditable>Can you identify market strength</span>
+                        <ul>
+                            <li class="green">Green candles are significantly larger than red</li>
+                            <li class="red">Red candles are significantly larger than green</li>
+                        </ul>
+                    </div>
+            
+                    <div class="questionWrapper">
+                        <span contenteditable>Can you identify market volume</span>
+                        <ul>
+                            <li class="green">Prices moves a greater distance going up with increasing volume</li>
+                            <li class="red">Prices moves a greater distance going down with increasing volume</li>
+                        </ul>
+                    </div>
+            
+                    <div class="questionWrapper">
+                        <span contenteditable>Can you identify 200 SMA</span>
+                        <ul>
+                            <li class="green">Price is greater than 200SMA</li>
+                            <li class="red">Price is lesser than 200SMA</li>
+                        </ul>
+                    </div>
+            
+                    <div class="questionWrapper">
+                        <span contenteditable>Can you identify 200 SMA direction</span>
+                        <ul>
+                            <li class="green">200SMA is sloping up more than down</li>
+                            <li class="red">200SMA is sloping down more than up</li>
+                        </ul>
+                    </div>
+            
+                    <div class="questionWrapper">
+                        <span contenteditable>Price has plotted a candlestick price action pattern that supports the trade
+                            direction</span>
+                        <ul>
+                            <li class="green">bullish engulfing</li>
+                            <li class="red">bearish engulfing</li>
+                        </ul>
+                    </div>
+            
+                    <div class="questionWrapper">
+                        <span contenteditable>Can you identify a chart pattern</span>
+                        <ul>
+                            <li class="red">double top</li>
+                            <li class="green">double bottom</li>
+                            <li class="red">head and shoulders</li>
+                            <li class="green">inverted head and shoulders</li>
+                        </ul>
+                    </div>
+            
+                    <div class="questionWrapper">
+                        <span contenteditable>Is price at a significant zone</span>
+                        <ul>
+                            <li class="green">Price bounced of support</li>
+                            <li class="red">Price broke support and retested</li>
+                            <li class="red">Price bounced of resistance</li>
+                            <li class="green">Price broke resistance and retested</li>
+                        </ul>
+                    </div>
+            
+                    <div class="questionWrapper">
+                        <span contenteditable>Can you identify a divergence</span>
+                        <ul>
+                            <li class="green">hidden bullish</li>
+                            <li class="red">hidden bearish</li>
+                            <li class="green">regular bullish</li>
+                            <li class="red">regular bearish</li>
+                        </ul>
+                    </div>
+            
+                    <div class="questionWrapper">
+                        <span contenteditable>Higher Trend supports the trade direction</span>
+                        <ul>
+                            <li class="green">Bullish</li>
+                            <li class="red">Bearish</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
+    
+
+
 
     <script>
         var totalQuestions = 0;
@@ -261,7 +457,7 @@
             greenpercent = 360 - (360 * (greenCount / totalQuestions));
             redpercent = 360 * (redCount / totalQuestions);
 
-            document.querySelector(".percentageWrapper").style.background = "radial-gradient(white 50%, transparent 51%),conic-gradient(red 0deg " + redpercent + "deg,#bababa " + redpercent + "deg " + greenpercent + "deg,#4caf50 " + greenpercent + "deg 360deg)";
+            document.querySelector(".percentageWrapper").style.background = "radial-gradient(#252526 60%, transparent 61%),conic-gradient(red 0deg " + redpercent + "deg,rgb(62 62 66) " + redpercent + "deg " + greenpercent + "deg,#4caf50 " + greenpercent + "deg 360deg)";
         }
 
         window.onload = function () {
